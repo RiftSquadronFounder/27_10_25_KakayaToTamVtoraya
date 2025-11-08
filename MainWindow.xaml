@@ -1,0 +1,84 @@
+﻿<Window x:Class="SyncDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Управление доступом" Height="600" Width="800">
+    <Grid>
+        <TabControl>
+            
+            <TabItem Header="First">
+                <Grid Margin="10">
+                    
+                    
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="0.25*"/>
+                    </Grid.RowDefinitions>
+
+                    
+                    
+                    
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        
+                        
+                        <Button Name="StartFileTasks" Content="Запустить задачи записи" Click="StartFileTasks_Click" Margin="0,0,10,0" Padding="10,5"/>
+                        <Button Name="ClearFile" Content="Очистить файл" Click="ClearFile_Click" Margin="0,0,10,0" Padding="10,5"/>
+                        <Button Name="ClearLogs" Content="Очистить логи" Click="ClearLogs_Click" Padding="10,5"/>
+                        
+                        
+                        
+                    </StackPanel>
+
+                    <ListBox Name="GUI_FileLogs" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+                    <TextBlock Grid.Row="2" Name="GUI_FileStatus" Margin="0,10,0,0"/>
+                </Grid>
+            </TabItem>
+
+            
+            <TabItem Header="Second">
+                <Grid Margin="10">
+                    
+                    
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="0.25*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    
+                    
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,10">
+                        
+                        
+                        <Button Name="StartDbTasks" Content="Запустить подключения" Click="StartDbTasks_Click" Margin="0,0,10,0" Padding="10,5"/>
+                        <Button Name="ReadConfig" Content="Чтение конфигурации" Click="ReadConfig_Click" Margin="0,0,10,0" Padding="10,5"/>
+                        <Button Name="WriteConfig" Content="Запись конфигурации" Click="WriteConfig_Click" Padding="10,5"/>
+                        
+                        
+                    </StackPanel>
+
+                    <ListBox Name="GUI_DbLogs" Grid.Row="1" Grid.ColumnSpan="2" 
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" Margin="0,10,5,0">
+                        <TextBlock Name="GUI_DBStatus" Margin="0,0,0,5"/>
+                        <TextBlock Name="GUI_ConfigStatus"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" Margin="5,10,0,0">
+                        <TextBlock Name="GUI_MutexStatus" Margin="0,0,0,5"/>
+                        <TextBlock Name="GUI_ActiveConnections" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
