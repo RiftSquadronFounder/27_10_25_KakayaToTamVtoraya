@@ -27,8 +27,6 @@ namespace SyncDemo
 
 
 
-        private List<string> FileThingLogsList = new List<string>();
-        private List<string> DBLogsList = new List<string>();
 
 
         public MainWindow()
@@ -49,7 +47,7 @@ namespace SyncDemo
             try
             {
                 appMutex = new Mutex(true, "SyncDemoAppMutex", out hasMutex);
-                UpdateMutexStatus();
+                IsThereAnyOtherApps();
             }
             catch (Exception ex)
             {
@@ -63,11 +61,13 @@ namespace SyncDemo
      
         private async void StartFileTasks_Click(object sender, RoutedEventArgs e)
         {
-            StartFileTasks.IsEnabled = false;
-            GUI_FileStatus.Text = "Запуск 5 задач записи...";
+            Dispatcher.Invoke(() => { 
+                GUI_FileStatus.Text = "Запуск 3 задач записи...";
+ 
+            });
 
             var tasks = new List<Task>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 int taskId = ++fileTaskCounter;
                 tasks.Add(Task.Run(() => WriteToFileAsync(taskId)));
@@ -75,8 +75,11 @@ namespace SyncDemo
 
             await Task.WhenAll(tasks);
 
-            GUI_FileStatus.Text = "Все задачи завершены";
-            StartFileTasks.IsEnabled = true;
+
+            Dispatcher.Invoke(() =>
+            {
+                GUI_FileStatus.Text = "Все задачи завершены";
+            });
         }
 
         private async Task WriteToFileAsync(int taskId)
@@ -133,9 +136,7 @@ namespace SyncDemo
         {
             Dispatcher.Invoke(() =>
             {
-                string log = $"{DateTime.Now:HH:mm:ss.fff} - {message}";
-                GUI_FileLogs.Items.Add(log);
-                GUI_FileLogs.ScrollIntoView(GUI_FileLogs.Items[GUI_FileLogs.Items.Count - 1]);
+                GUI_FileLogs.Items.Insert(0, $"{DateTime.Now:HH:mm:ss.fff} - {message}");
             });
         }
 
@@ -143,23 +144,26 @@ namespace SyncDemo
 
         private async void StartDbTasks_Click(object sender, RoutedEventArgs e)
         {
-            StartDbTasks.IsEnabled = false;
-            GUI_DBStatus.Text = "Запуск 6 подключений...";
+            Dispatcher.Invoke(() => { 
+            GUI_DBStatus.Text = "Запуск 4 подключений...";
+            });
 
             var tasks = new List<Task>();
-            for (int i = 1; i <= 6; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 int taskId = i;
-                tasks.Add(Task.Run(() => SimulateDatabaseConnectionAsync(taskId)));
+                tasks.Add(Task.Run(() => SimDBConnection(taskId)));
             }
 
             await Task.WhenAll(tasks);
 
-            GUI_DBStatus.Text = "Все подключения завершены";
-            StartDbTasks.IsEnabled = true;
+            Dispatcher.Invoke(() =>
+            {
+                GUI_DBStatus.Text = "Все подключения завершены";
+            });
         }
 
-        private async Task SimulateDatabaseConnectionAsync(int connectionId)
+        private async Task SimDBConnection(int connectionId)
         {
             AddDBLog($"Подключение {connectionId}: ожидает семафор");
 
@@ -230,7 +234,7 @@ namespace SyncDemo
             });
         }
 
-        private void UpdateMutexStatus()
+        private void IsThereAnyOtherApps()
         {
             Dispatcher.Invoke(() =>
             {
@@ -238,10 +242,7 @@ namespace SyncDemo
                 {
                     throw new Exception("Обнаружено другое запущенное приложение");
                 }
-                else
-                {
-                    GUI_MutexStatus.Text = "Mutex: Приложение единственное в системе";
-                }
+                
                 
             });
         }
@@ -250,9 +251,7 @@ namespace SyncDemo
         {
             Dispatcher.Invoke(() =>
             {
-                string log = $"{DateTime.Now:HH:mm:ss.fff} - {message}";
-                GUI_DbLogs.Items.Add(log);
-                GUI_DbLogs.ScrollIntoView(GUI_DbLogs.Items[GUI_DbLogs.Items.Count - 1]);
+                GUI_DbLogs.Items.Insert(0, $"{DateTime.Now:HH:mm:ss.fff} - {message}");
             });
         }
 
